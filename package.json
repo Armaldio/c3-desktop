@@ -13,7 +13,7 @@
     "Electron",
     "construct"
   ],
-  "author": "GitHub",
+  "author": "Armaldio <armaldio@gmail.com>",
   "license": "MIT",
   "devDependencies": {
     "electron": "^7.1.6",
@@ -31,15 +31,13 @@
       "target": [
         "nsis",
         "portable",
-        "appx",
         "msi"
       ]
     },
     "linux": {
       "target": [
         "zip",
-        "AppImage",
-        "deb"
+        "AppImage"
       ]
     },
     "mac": {
