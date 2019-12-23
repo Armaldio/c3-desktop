@@ -1,6 +1,6 @@
 {
   "name": "c3-electron",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "Construct 3 running inside of Electron",
   "main": "main.js",
   "scripts": {
