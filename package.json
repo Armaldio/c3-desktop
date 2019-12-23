@@ -1,0 +1,54 @@
+{
+  "name": "c3-electron",
+  "version": "1.0.0",
+  "description": "Construct 3 running inside of Electron",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
+  },
+  "repository": "https://github.com/Armaldio/c3-desktop",
+  "keywords": [
+    "Electron",
+    "construct"
+  ],
+  "author": "GitHub",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^7.1.6",
+    "electron-builder": "^21.2.0"
+  },
+  "dependencies": {
+    "electron-updater": "^4.2.0"
+  },
+  "build": {
+    "appId": "com.armaldio.c3-desktop",
+    "publish": [
+      "github"
+    ],
+    "win": {
+      "target": [
+        "nsis",
+        "portable",
+        "appx",
+        "msi"
+      ]
+    },
+    "linux": {
+      "target": [
+        "zip",
+        "AppImage",
+        "deb"
+      ]
+    },
+    "mac": {
+      "target": [
+        "dmg",
+        "mas",
+        "pkg",
+        "zip"
+      ]
+    }
+  }
+}
