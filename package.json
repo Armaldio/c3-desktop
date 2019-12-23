@@ -1,6 +1,6 @@
 {
   "name": "c3-electron",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Construct 3 running inside of Electron",
   "main": "main.js",
   "scripts": {
@@ -23,6 +23,16 @@
     "electron-updater": "^4.2.0"
   },
   "build": {
+    "fileAssociations": [
+      {
+        "ext": "c3p",
+        "name": "Construct 3 Project File"
+      },
+      {
+        "ext": "c3addon",
+        "name": "Construct 3 Addon File"
+      }
+    ],
     "appId": "com.armaldio.c3-desktop",
     "publish": [
       "github"

@@ -1,30 +1,35 @@
-const {app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, protocol } = require('electron');
 const fs = require('fs');
 const { autoUpdater } = require("electron-updater")
 const path = require('path');
+
+console.log(process.argv);
 
 let mainWindow;
 
 const isProd = process.env.NODE_ENV === "production";
 
-process.on('uncaughtException', function(err) {
+app.commandLine.appendSwitch("--in-process-gpu");
+app.commandLine.appendSwitch("--disable-direct-composition");
+
+process.on('uncaughtException', function (err) {
     //log the message and stack trace
     fs.writeFileSync('crash.log', err + "\n" + err.stack);
 
     //do any cleanup like shutting down servers, etc
 
     //relaunch the app (if you want)
-    app.relaunch({args: []});
+    app.relaunch({ args: [] });
     app.exit(0);
 });
 
-process.on('SIGTERM', function() {
+process.on('SIGTERM', function () {
     fs.writeFileSync('shutdown.log', "Received SIGTERM signal");
 
     //do any cleanup like shutting down servers, etc
 
     //relaunch the app (if you want)
-    app.relaunch({args: []});
+    app.relaunch({ args: [] });
     app.exit(0);
 });
 
@@ -40,17 +45,18 @@ async function createWindow() {
         show: false,
         webPreferences: {
             preload: path.join(__dirname, 'preload.js'),
-            // webSecurity: false,
-            // nodeIntegration: true,
+            webSecurity: false,
+            nodeIntegration: true,
             // nodeIntegrationInWorker: true,
             // nodeIntegrationInSubFrames: true,
             nativeWindowOpen: true,
-            // sandbox: false
+            sandbox: false,
+            additionalArguments: [...process.argv.splice(2)]
         },
     });
 
 
-    mainWindow.loadURL('https://editor.construct.net', {userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36'});
+    mainWindow.loadURL('https://editor.construct.net', { userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36' });
     if (!isProd) {
         mainWindow.removeMenu();
         mainWindow.webContents.openDevTools();

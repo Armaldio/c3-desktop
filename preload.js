@@ -1,11 +1,11 @@
 var call = Function.prototype.call;
 Function.prototype.call = function () {
-    console.log('call to ', this.name, 'ARGUMENTS', arguments);
+    // console.log('call to ', this.name, 'ARGUMENTS', arguments);
     return call.apply(this, arguments);
 };
 
 window.addEventListener('message', message => {
-    console.log('Message: ', message);
+    // console.log('Message: ', message);
 });
 
 const proxyIt = (el) => new Proxy(el, {
@@ -17,7 +17,10 @@ const proxyIt = (el) => new Proxy(el, {
 
 const electron = require('electron');
 const dialog = electron.remote.dialog;
+const args = electron.remote.args;
 const fs = require('fs');
+
+console.log('args', process.argv);
 
 const basename = (str) => {
     return str.split(/(\\|\/)/g).pop();
