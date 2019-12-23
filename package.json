@@ -40,11 +40,8 @@
       ]
     },
     "mac": {
-      "identity": null,
       "target": [
         "dmg",
-        "mas",
-        "pkg",
         "zip"
       ]
     }
