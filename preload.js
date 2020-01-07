@@ -1,3 +1,11 @@
+const path = require('path');
+const fs = require('fs');
+const electron = require('electron');
+const dialog = electron.remote.dialog;
+const args = electron.remote.args;
+
+const portableDir = process.env.PORTABLE_EXECUTABLE_DIR;
+
 var call = Function.prototype.call;
 Function.prototype.call = function () {
     // console.log('call to ', this.name, 'ARGUMENTS', arguments);
@@ -8,17 +16,39 @@ window.addEventListener('message', message => {
     // console.log('Message: ', message);
 });
 
+// document.addEventListener("DOMContentLoaded", function () {
+//     let cancelInterval = setInterval(() => {
+//
+//         if (window.localforage) {
+//             let config = {};
+//             const filePath = path.join(portableDir, 'config.json');
+//             if (fs.existsSync(filePath)) {
+//                 config = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+//             }
+//             console.log('your config is', config);
+//
+//             if (config.googleDriveToken) {
+//                 window.localforage.setItem('C3_Cloud_Token_GOOGLE DRIVE', config.googleDriveToken).then(function () {
+//                     return window.localforage.getItem('C3_Cloud_Token_GOOGLE DRIVE');
+//                 }).then(function (value) {
+//                     console.log('value', value);
+//                 }).catch(function (err) {
+//                     console.log('err', err);
+//                 });
+//             }
+//
+//             clearInterval(cancelInterval);
+//         }
+//
+//     }, 100);
+// });
+
 const proxyIt = (el) => new Proxy(el, {
     get(target, propKey) {
         console.log(`Polyfill "${propKey}"`, target[propKey], target);
         return target[propKey];
     },
 });
-
-const electron = require('electron');
-const dialog = electron.remote.dialog;
-const args = electron.remote.args;
-const fs = require('fs');
 
 console.log('args', process.argv);
 

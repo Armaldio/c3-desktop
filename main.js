@@ -1,6 +1,6 @@
-const { app, BrowserWindow, protocol } = require('electron');
+const {app, BrowserWindow, protocol} = require('electron');
 const fs = require('fs');
-const { autoUpdater } = require("electron-updater")
+const {autoUpdater} = require("electron-updater");
 const path = require('path');
 
 console.log(process.argv);
@@ -19,7 +19,7 @@ process.on('uncaughtException', function (err) {
     //do any cleanup like shutting down servers, etc
 
     //relaunch the app (if you want)
-    app.relaunch({ args: [] });
+    app.relaunch({args: []});
     app.exit(0);
 });
 
@@ -29,7 +29,7 @@ process.on('SIGTERM', function () {
     //do any cleanup like shutting down servers, etc
 
     //relaunch the app (if you want)
-    app.relaunch({ args: [] });
+    app.relaunch({args: []});
     app.exit(0);
 });
 
@@ -55,8 +55,9 @@ async function createWindow() {
         },
     });
 
+    app.userAgentFallback = app.userAgentFallback.replace('Electron/' + process.versions.electron, '');
 
-    mainWindow.loadURL('https://editor.construct.net', { userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36' });
+    mainWindow.loadURL('https://editor.construct.net');
     if (!isProd) {
         mainWindow.removeMenu();
         mainWindow.webContents.openDevTools();

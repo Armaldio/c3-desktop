@@ -1,6 +1,6 @@
 {
   "name": "c3-electron",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Construct 3 running inside of Electron",
   "main": "main.js",
   "scripts": {
@@ -16,13 +16,14 @@
   "author": "Armaldio <armaldio@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "electron": "^7.1.6",
+    "electron": "^7.1.7",
     "electron-builder": "^21.2.0"
   },
   "dependencies": {
     "electron-updater": "^4.2.0"
   },
   "build": {
+    "files": [ "!config.json" ],
     "fileAssociations": [
       {
         "ext": "c3p",
@@ -39,7 +40,6 @@
     ],
     "win": {
       "target": [
-        "nsis",
         "portable"
       ]
     },
