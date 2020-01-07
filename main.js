@@ -59,9 +59,13 @@ async function createWindow() {
 
     mainWindow.loadURL('https://editor.construct.net');
     if (!isProd) {
-        mainWindow.removeMenu();
         mainWindow.webContents.openDevTools();
+    } else {
+        app.on('browser-window-created', function (e, window) {
+            window.removeMenu();
+        });
     }
+
     mainWindow.maximize();
 
     mainWindow.once('ready-to-show', () => {
