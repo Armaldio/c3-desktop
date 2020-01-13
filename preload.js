@@ -12,6 +12,14 @@ Function.prototype.call = function () {
     return call.apply(this, arguments);
 };
 
+// window.onbeforeunload = function (e) {
+//     // Cancel the event
+//     e.preventDefault();
+//
+//     // Chrome requires returnValue to be set
+//     e.returnValue = 'Really want to quit the game?';
+// };
+
 window.addEventListener('message', message => {
     // console.log('Message: ', message);
 });

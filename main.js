@@ -1,13 +1,15 @@
-const {app, BrowserWindow, protocol} = require('electron');
+const {app, BrowserWindow, protocol, Menu, MenuItem} = require('electron');
 const fs = require('fs');
 const {autoUpdater} = require("electron-updater");
 const path = require('path');
+const isDev = require('./isDev');
+
 
 console.log(process.argv);
 
 let mainWindow;
 
-const isProd = process.env.NODE_ENV === "production";
+console.log('isDev', isDev);
 
 app.commandLine.appendSwitch("--in-process-gpu");
 app.commandLine.appendSwitch("--disable-direct-composition");
@@ -48,7 +50,7 @@ async function createWindow() {
             webSecurity: false,
             nodeIntegration: true,
             // nodeIntegrationInWorker: true,
-            // nodeIntegrationInSubFrames: true,
+            nodeIntegrationInSubFrames: true,
             nativeWindowOpen: true,
             sandbox: false,
             additionalArguments: [...process.argv.splice(2)]
@@ -57,16 +59,38 @@ async function createWindow() {
 
     app.userAgentFallback = app.userAgentFallback.replace('Electron/' + process.versions.electron, '');
 
+    const defaultMenu = Menu.getApplicationMenu();
+    const menu = Menu.buildFromTemplate(defaultMenu.items);
+
+    menu.append(new MenuItem({
+        label: 'Prevent close',
+        accelerator: 'CmdOrCtrl+W',
+        click: () => {
+            console.log('Preventing a close on ctrl+w');
+        }
+    }));
+    mainWindow.setMenu(menu);
+
     mainWindow.loadURL('https://editor.construct.net');
-    if (!isProd) {
+    if (isDev) {
         mainWindow.webContents.openDevTools();
     } else {
-        app.on('browser-window-created', function (e, window) {
-            window.removeMenu();
-        });
+        console.log('Running in production environement');
+
+        mainWindow.removeMenu();
     }
 
     mainWindow.maximize();
+
+    app.on('browser-window-created', function (e, window) {
+        console.log('new window created !');
+
+        window.setMenu(menu);
+
+        if (!isDev) {
+            window.removeMenu();
+        }
+    });
 
     mainWindow.once('ready-to-show', () => {
         mainWindow.show();
