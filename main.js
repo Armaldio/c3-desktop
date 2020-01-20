@@ -1,9 +1,8 @@
-const {app, BrowserWindow, protocol, Menu, MenuItem} = require('electron');
+const {app, BrowserWindow, protocol, Menu, MenuItem, session} = require('electron');
 const fs = require('fs');
 const {autoUpdater} = require("electron-updater");
 const path = require('path');
 const isDev = require('./isDev');
-
 
 console.log(process.argv);
 
@@ -40,20 +39,29 @@ process.on('SIGTERM', function () {
 autoUpdater.checkForUpdatesAndNotify();
 
 async function createWindow() {
+    // session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
+    //     callback({ responseHeaders: Object.assign({
+    //             "Content-Security-Policy": [ "default-src 'none'" ]
+    //         }, details.responseHeaders)});
+    // });
+
+
     // Create the browser window.
     mainWindow = new BrowserWindow({
         width: 800,
         height: 600,
         show: false,
         webPreferences: {
-            preload: path.join(__dirname, 'preload.js'),
+            // preload: path.join(__dirname, 'preload.js'),
             webSecurity: false,
             nodeIntegration: true,
             // nodeIntegrationInWorker: true,
             nodeIntegrationInSubFrames: true,
             nativeWindowOpen: true,
             sandbox: false,
-            additionalArguments: [...process.argv.splice(2)]
+            additionalArguments: [...process.argv.splice(2)],
+            devtool: true,
+            webviewTag: true,
         },
     });
 
@@ -71,7 +79,8 @@ async function createWindow() {
     }));
     mainWindow.setMenu(menu);
 
-    mainWindow.loadURL('https://editor.construct.net');
+    // mainWindow.loadURL('https://editor.construct.net');
+    mainWindow.loadURL('http://localhost:8080');
     if (isDev) {
         mainWindow.webContents.openDevTools();
     } else {

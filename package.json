@@ -20,10 +20,14 @@
     "electron-builder": "^21.2.0"
   },
   "dependencies": {
-    "electron-updater": "^4.2.0"
+    "electron-updater": "^4.2.0",
+    "http-proxy": "^1.18.0",
+    "vue": "^2.6.11"
   },
   "build": {
-    "files": [ "!config.json" ],
+    "files": [
+      "!config.json"
+    ],
     "fileAssociations": [
       {
         "ext": "c3p",

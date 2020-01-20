@@ -3,6 +3,22 @@ const fs = require('fs');
 const electron = require('electron');
 const dialog = electron.remote.dialog;
 const args = electron.remote.args;
+const {ipcRenderer} = require('electron');
+
+/**
+ * Relay webview console events to the main window ----------
+ */
+const methods = Object.getOwnPropertyNames(console);
+methods.forEach((method) => {
+    const exLog = console[method];
+    console[method] = function (msg) {
+        exLog.apply(console, arguments);
+        ipcRenderer.sendToHost(method, ...arguments);
+    };
+});
+/**
+ * ----------------------------------------------------------
+ */
 
 const portableDir = process.env.PORTABLE_EXECUTABLE_DIR;
 
@@ -12,19 +28,15 @@ Function.prototype.call = function () {
     return call.apply(this, arguments);
 };
 
-// window.onbeforeunload = function (e) {
-//     // Cancel the event
-//     e.preventDefault();
-//
-//     // Chrome requires returnValue to be set
-//     e.returnValue = 'Really want to quit the game?';
-// };
-
 window.addEventListener('message', message => {
     // console.log('Message: ', message);
 });
 
-// document.addEventListener("DOMContentLoaded", function () {
+// var devtoolElem = document.createElement("construct-devtool");
+
+document.addEventListener("DOMContentLoaded", function () {
+    // document.body.appendChild(devtoolElem);
+
 //     let cancelInterval = setInterval(() => {
 //
 //         if (window.localforage) {
@@ -49,7 +61,7 @@ window.addEventListener('message', message => {
 //         }
 //
 //     }, 100);
-// });
+});
 
 const proxyIt = (el) => new Proxy(el, {
     get(target, propKey) {

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Construct 3</title>
+    <style>
+        #webview {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: inline-flex !important;
+        }
+
+        #toolbox {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            border: 1px solid red;
+        }
+    </style>
+</head>
+<body id="app">
+
+<div id="toolbox">
+    <button>Hello</button>
+</div>
+
+<webview
+        id="webview"
+        src="https://editor.construct.net"
+        nodeintegration
+        nodeintegrationinsubframes
+        enableremotemodule
+        plugins
+        disablewebsecurity
+        allowpopups
+        webpreferences="sandbox=false"
+        preload="./preload.js"
+>
+</webview>
+
+<script>
+    // Stream webview log to browserwindow log
+    const webview = document.querySelector('#webview');
+    webview.addEventListener('ipc-message', event => {
+        console[event.channel].apply(null, event.args);
+    });
+
+    const Vue = require('vue/dist/vue');
+
+    new Vue({
+        data: {
+            opened: false
+        }
+    }).$mount('#toolbox');
+</script>
+</body>
+</html>
