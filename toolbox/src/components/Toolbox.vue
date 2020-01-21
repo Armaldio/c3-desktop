@@ -42,13 +42,14 @@ export default Vue.extend({
     width: 400px;
     height: 100%;
     z-index: 1;
-    background-color: white;
-    transition: left .5s;
+    background-color: #ccc;
+    transition: all .25s;
   }
 
   .opened {
     left: 0 !important;
-  }
+    border-top-right-radius: 32px;
+   }
 
   .toggle-drawer-button {
     position: absolute;
