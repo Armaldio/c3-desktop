@@ -5,6 +5,9 @@ const fs = require('fs');
 console.log('__dirname', __dirname);
 
 module.exports = {
+  transpileDependencies: [
+    'vuetify',
+  ],
   configureWebpack: config => ({
     plugins: [
       new webpack.DefinePlugin({

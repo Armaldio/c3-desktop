@@ -18,10 +18,7 @@
 </template>
 
 <script>
-import fs from 'fs';
 import Toolbox from '@/components/Toolbox.vue';
-
-// console.log('__dirname', __DIRNAME__);
 
 export default {
   name: 'home',

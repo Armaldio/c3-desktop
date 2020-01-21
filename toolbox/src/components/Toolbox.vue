@@ -1,6 +1,17 @@
 <template>
-  <div id="toolbox">
-    <button @click="increment">Hello</button>
+  <div
+    id="toolbox"
+    :class="{'opened': opened}"
+  >
+    <v-btn>Open devtool</v-btn>
+
+    <v-btn
+      fab
+      class="toggle-drawer-button"
+      @click="opened = !opened"
+    >
+      <v-icon>{{ `mdi mdi-menu-${opened ? 'left' : 'right'}-outline` }}</v-icon>
+    </v-btn>
   </div>
 </template>
 
@@ -9,21 +20,41 @@ import Vue from 'vue';
 
 export default Vue.extend({
   name: 'HelloWorld',
+  data() {
+    return {
+      opened: true,
+    };
+  },
   props: {
     msg: String,
   },
 });
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped lang="scss">
+<style
+  scoped
+  lang="scss"
+>
   #toolbox {
     position: fixed;
     top: 0;
-    left: 0;
+    left: -400px;
     width: 400px;
     height: 100%;
     z-index: 1;
-    border: 1px solid red;
+    background-color: white;
+    transition: left .5s;
+  }
+
+  .opened {
+    left: 0 !important;
+  }
+
+  .toggle-drawer-button {
+    position: absolute;
+    top: 50%;
+    transform: translate(0, -50%);
+    left: 380px;
+    z-index: 1;
   }
 </style>
