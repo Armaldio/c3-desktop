@@ -8,6 +8,9 @@ module.exports = {
   transpileDependencies: [
     'vuetify',
   ],
+  devServer: {
+      disableHostCheck: true
+  },
   configureWebpack: config => ({
     target: 'electron-renderer',
     plugins: [
