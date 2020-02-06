@@ -3,7 +3,8 @@
     id="toolbox"
     :class="{'opened': opened}"
   >
-    <v-btn>Open devtool</v-btn>
+    <v-btn @click="openDevTool">Open devtool</v-btn>
+    <v-btn @click="closeDevTool">Close devtool</v-btn>
 
     <v-btn
       fab
@@ -17,6 +18,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import { ipcRenderer } from 'electron';
 
 export default Vue.extend({
   name: 'HelloWorld',
@@ -27,6 +29,25 @@ export default Vue.extend({
   },
   props: {
     msg: String,
+  },
+  methods: {
+    async sendMessage(channel: string, ...args: any) {
+      return new Promise(((resolve, reject) => {
+        ipcRenderer.on(channel, (event, arg) => {
+          resolve(arg);
+        });
+        ipcRenderer.send(channel, ...args);
+      }));
+    },
+
+    async openDevTool() {
+      const result = await this.sendMessage('open-dev-tools');
+      console.log('result', result);
+    },
+    async closeDevTool() {
+      const result = await this.sendMessage('close-dev-tools');
+      console.log('result', result);
+    },
   },
 });
 </script>

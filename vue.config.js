@@ -9,6 +9,7 @@ module.exports = {
     'vuetify',
   ],
   configureWebpack: config => ({
+    target: 'electron-renderer',
     plugins: [
       new webpack.DefinePlugin({
         __dirname: JSON.stringify(__dirname),
