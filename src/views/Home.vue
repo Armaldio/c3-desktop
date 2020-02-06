@@ -19,17 +19,17 @@
 
 <script>
 import Toolbox from '@/components/Toolbox.vue';
+import contextMenu from 'electron-context-menu';
 
 export default {
   name: 'home',
   data() {
-    return {
-    };
+    return {};
   },
   computed: {
     preloadPath() {
       // eslint-disable-next-line
-      return `file://${require('path').resolve(__public, './preload.js')}`;
+        return `file://${require('path').resolve(__public, './preload.js')}`;
     },
   },
   components: {
@@ -37,6 +37,29 @@ export default {
   },
   mounted() {
     const webview = document.querySelector('#webview');
+    webview.addEventListener('dom-ready', () => {
+      contextMenu({
+        window: webview,
+      });
+
+      // TODO https://github.com/Armaldio/c3-desktop/issues/18
+      //       console.log('adding');
+      //       webview.executeJavaScript(`
+      // var link = document.createElement('link');
+      // link.href = 'https://fonts.googleapis.com/css?family=Source+Code+Pro&display=swap';
+      // link.rel = 'stylesheet';
+      // document.head.appendChild(link);
+      //       `);
+      //       webview.insertCSS(`
+      // @import url('https://fonts.googleapis.com/css?family=Source+Code+Pro&display=swap');
+      //
+      // .CodeMirror {
+      //   // font-family: 'Source Code Pro', monospace !important;
+      //   font-size: 24px !important;
+      // }
+      //     `);
+    });
+
     webview.addEventListener('ipc-message', (event) => {
       console[event.channel].apply(null, event.args);
     });

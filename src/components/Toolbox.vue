@@ -6,6 +6,9 @@
     <v-btn @click="openDevTool">Open devtool</v-btn>
     <v-btn @click="closeDevTool">Close devtool</v-btn>
 
+    <v-btn @click="closeDevToolWebview">Open webview devtool</v-btn>
+    <v-btn @click="closeDevToolWebview">Close webview devtool</v-btn>
+
     <v-btn
       fab
       class="toggle-drawer-button"
@@ -21,10 +24,11 @@ import Vue from 'vue';
 import { ipcRenderer } from 'electron';
 
 export default Vue.extend({
-  name: 'HelloWorld',
+  name: 'Toolbox',
   data() {
     return {
       opened: true,
+      webview: document.querySelector('#webview'),
     };
   },
   props: {
@@ -48,6 +52,18 @@ export default Vue.extend({
       const result = await this.sendMessage('close-dev-tools');
       console.log('result', result);
     },
+    async openDevToolWebview() {
+      const webview = document.querySelector('#webview');
+      if (webview) {
+        webview.openDevTools();
+      }
+    },
+    async closeDevToolWebview() {
+      const webview = document.querySelector('#webview');
+      if (webview) {
+        webview.openDevTools();
+      }
+    },
   },
 });
 </script>
@@ -70,7 +86,7 @@ export default Vue.extend({
   .opened {
     left: 0 !important;
     border-top-right-radius: 32px;
-   }
+  }
 
   .toggle-drawer-button {
     position: absolute;

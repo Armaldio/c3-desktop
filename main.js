@@ -69,6 +69,19 @@ async function createWindow() {
     },
   });
 
+  /* IPC */
+  ipcMain.on('open-dev-tools', (event, arg) => {
+    console.log('ok');
+    mainWindow.webContents.openDevTools();
+    event.reply('open-dev-tools', true);
+  });
+
+
+  ipcMain.on('close-dev-tools', (event, arg) => {
+    mainWindow.webContents.closeDevTools();
+    event.reply('close-dev-tools', true);
+  });
+
   app.userAgentFallback = app.userAgentFallback.replace(`Electron/${process.versions.electron}`, '');
 
   const defaultMenu = Menu.getApplicationMenu();
@@ -126,16 +139,4 @@ app.on('activate', async () => {
   if (mainWindow === null) {
     await createWindow();
   }
-});
-
-/* IPC */
-ipcMain.on('open-dev-tools', (event, arg) => {
-  mainWindow.webContents.openDevTools();
-  event.reply('open-dev-tools', true);
-});
-
-
-ipcMain.on('close-dev-tools', (event, arg) => {
-  mainWindow.webContents.closeDevTools();
-  event.reply('close-dev-tools', true);
 });

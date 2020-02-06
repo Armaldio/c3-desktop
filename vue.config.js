@@ -1,15 +1,12 @@
 const webpack = require('webpack');
 const path = require('path');
-const fs = require('fs');
-
-console.log('__dirname', __dirname);
 
 module.exports = {
   transpileDependencies: [
     'vuetify',
   ],
   devServer: {
-      disableHostCheck: true
+    disableHostCheck: true,
   },
   configureWebpack: config => ({
     target: 'electron-renderer',
