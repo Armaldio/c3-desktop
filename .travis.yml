@@ -23,7 +23,7 @@ cache:
     - $HOME/.cache/electron-builder
 
 script:
-  - yarn dist
+  - yarn prod
 
 # branches:
   # except:
