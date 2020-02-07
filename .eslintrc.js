@@ -12,7 +12,8 @@ module.exports = {
     'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
     // 'import/core-modules': ['electron']
-    'import/no-extraneous-dependencies': ['error', {'devDependencies': true}]
+    'import/no-extraneous-dependencies': ['error', {'devDependencies': true}],
+    'linebreak-style': process.env.NODE_ENV === 'production' ? 'off' : 'warn'
   },
   parserOptions: {
     parser: '@typescript-eslint/parser',
