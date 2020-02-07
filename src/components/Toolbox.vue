@@ -6,8 +6,10 @@
     <v-btn @click="openDevTool">Open devtool</v-btn>
     <v-btn @click="closeDevTool">Close devtool</v-btn>
 
-    <v-btn @click="closeDevToolWebview">Open webview devtool</v-btn>
-    <v-btn @click="closeDevToolWebview">Close webview devtool</v-btn>
+    <v-btn @click="closeDevToolWebview">Open construct devtool</v-btn>
+    <v-btn @click="closeDevToolWebview">Close construct devtool</v-btn>
+
+    <v-btn @click="ReloadWebview">Reload Construct</v-btn>
 
     <v-btn
       fab
@@ -23,12 +25,14 @@
 import Vue from 'vue';
 import { ipcRenderer } from 'electron';
 
+  import WebviewTag = Electron.WebviewTag;
+
 export default Vue.extend({
   name: 'Toolbox',
   data() {
     return {
       opened: true,
-      webview: document.querySelector('#webview'),
+      webview: document.querySelector('#webview') as WebviewTag,
     };
   },
   props: {
@@ -53,15 +57,18 @@ export default Vue.extend({
       console.log('result', result);
     },
     async openDevToolWebview() {
-      const webview = document.querySelector('#webview');
-      if (webview) {
-        webview.openDevTools();
+      if (this.webview) {
+        this.webview.openDevTools();
       }
     },
     async closeDevToolWebview() {
-      const webview = document.querySelector('#webview');
-      if (webview) {
-        webview.openDevTools();
+      if (this.webview) {
+        this.webview.openDevTools();
+      }
+    },
+    async ReloadWebview() {
+      if (this.webview) {
+        this.webview.reload();
       }
     },
   },
