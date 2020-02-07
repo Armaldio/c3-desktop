@@ -29,42 +29,48 @@ export default {
   computed: {
     preloadPath() {
       // eslint-disable-next-line
-        return `file://${require('path').resolve(__public, './preload.js')}`;
+        const path = `file://${require('path').resolve('./preload.js')}`;
+      console.log('path', path);
+      return path;
     },
   },
   components: {
     Toolbox,
   },
   mounted() {
+    console.log('this.preloadPath', this.preloadPath);
+
     const webview = document.querySelector('#webview');
-    webview.addEventListener('dom-ready', () => {
-      contextMenu({
-        window: webview,
+    if (webview) {
+      webview.addEventListener('dom-ready', () => {
+        contextMenu({
+          window: webview,
+        });
+
+        // TODO https://github.com/Armaldio/c3-desktop/issues/18
+        //       console.log('adding');
+        //       webview.executeJavaScript(`
+        // var link = document.createElement('link');
+        // link.href = 'https://fonts.googleapis.com/css?family=Source+Code+Pro&display=swap';
+        // link.rel = 'stylesheet';
+        // document.head.appendChild(link);
+        //       `);
+        //       webview.insertCSS(`
+        // @import url('https://fonts.googleapis.com/css?family=Source+Code+Pro&display=swap');
+        //
+        // .CodeMirror {
+        //   // font-family: 'Source Code Pro', monospace !important;
+        //   font-size: 24px !important;
+        // }
+        //     `);
       });
 
-      // TODO https://github.com/Armaldio/c3-desktop/issues/18
-      //       console.log('adding');
-      //       webview.executeJavaScript(`
-      // var link = document.createElement('link');
-      // link.href = 'https://fonts.googleapis.com/css?family=Source+Code+Pro&display=swap';
-      // link.rel = 'stylesheet';
-      // document.head.appendChild(link);
-      //       `);
-      //       webview.insertCSS(`
-      // @import url('https://fonts.googleapis.com/css?family=Source+Code+Pro&display=swap');
-      //
-      // .CodeMirror {
-      //   // font-family: 'Source Code Pro', monospace !important;
-      //   font-size: 24px !important;
-      // }
-      //     `);
-    });
+      webview.addEventListener('ipc-message', (event) => {
+        // console.log('event', event.channel);
 
-    webview.addEventListener('ipc-message', (event) => {
-      console.log('event', event.channel);
-
-      console[event.channel].apply(null, event.args);
-    });
+        console[event.channel].apply(null, event.args);
+      });
+    }
   },
 };
 </script>

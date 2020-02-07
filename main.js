@@ -5,7 +5,11 @@ const fs = require('fs');
 const { autoUpdater } = require('electron-updater');
 const path = require('path');
 const { ipcMain } = require('electron');
+const serve = require('electron-serve');
 const isDev = require('./isDev');
+
+
+const loadURL = serve({ directory: 'dist' });
 
 
 console.log(process.argv);
@@ -115,10 +119,11 @@ async function createWindow() {
   mainWindow.setMenu(menu);
 
   // mainWindow.loadURL('https://editor.construct.net');
-  mainWindow.loadURL('http://localhost:8080');
   if (isDev) {
+    mainWindow.loadURL('http://localhost:8080');
     mainWindow.webContents.openDevTools();
   } else {
+    await loadURL(mainWindow);
     console.log('Running in production environement');
 
     mainWindow.removeMenu();
@@ -137,6 +142,7 @@ async function createWindow() {
   });
 
   mainWindow.once('ready-to-show', () => {
+    console.log('ready to show');
     mainWindow.show();
   });
 

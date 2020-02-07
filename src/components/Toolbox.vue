@@ -79,11 +79,13 @@ export default Vue.extend({
   },
   mounted(): void {
     this.webview = document.querySelector('#webview') as WebviewTag;
-    ipcRenderer.on('reload', (event, arg) => {
-      if (this.webview) {
-        this.webview.reload();
-      }
-    });
+    if (this.webview) {
+      ipcRenderer.on('reload', (event, arg) => {
+        if (this.webview) {
+          this.webview.reload();
+        }
+      });
+    }
   },
 });
 </script>

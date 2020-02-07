@@ -1,6 +1,8 @@
 const webpack = require('webpack');
 const path = require('path');
 
+const isProd = process.env.NODE_ENV === 'production';
+
 module.exports = {
   transpileDependencies: [
     'vuetify',
@@ -12,8 +14,7 @@ module.exports = {
     target: 'electron-renderer',
     plugins: [
       new webpack.DefinePlugin({
-        __dirname: JSON.stringify(__dirname),
-        __public: JSON.stringify(path.join(__dirname, 'public')),
+        // __dirname: JSON.stringify(__dirname),
       }),
     ],
   }),

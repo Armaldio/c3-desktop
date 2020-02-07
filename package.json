@@ -10,7 +10,7 @@
     "start": "electron .",
     "pack": "electron-builder --dir",
     "dist": "electron-builder",
-    "dev": "concurrently \"npm run serve\" \"npm run start\""
+    "prod": "run-s build dist"
   },
   "repository": "https://github.com/Armaldio/c3-desktop",
   "keywords": [
@@ -20,6 +20,7 @@
   "author": "Armaldio <armaldio@gmail.com>",
   "license": "MIT",
   "devDependencies": {
+    "@types/node": "12",
     "@vue/cli-plugin-babel": "^4.1.0",
     "@vue/cli-plugin-eslint": "^4.1.0",
     "@vue/cli-plugin-router": "^4.1.0",
@@ -28,11 +29,11 @@
     "@vue/cli-service": "^4.1.0",
     "@vue/eslint-config-airbnb": "^4.0.0",
     "@vue/eslint-config-typescript": "^4.0.0",
-    "concurrently": "^5.1.0",
     "electron": "^8.0.0",
     "electron-builder": "^22.3.2",
     "eslint": "^5.16.0",
     "eslint-plugin-vue": "^5.0.0",
+    "npm-run-all": "^4.1.5",
     "sass": "^1.23.7",
     "sass-loader": "^8.0.0",
     "typescript": "~3.5.3",
@@ -44,8 +45,8 @@
     "@mdi/font": "^4.9.95",
     "core-js": "^3.4.4",
     "electron-context-menu": "^0.16.0",
+    "electron-serve": "^0.4.1",
     "electron-updater": "^4.2.0",
-    "http-proxy": "^1.18.0",
     "roboto-fontface": "*",
     "vue": "^2.6.11",
     "vue-router": "^3.1.3",
@@ -53,8 +54,15 @@
     "vuex": "^3.1.2"
   },
   "build": {
+    "asar": false,
+    "directories": {
+      "output": "bin"
+    },
     "files": [
-      "!config.json"
+      "!config.json",
+      "!src/*",
+      "dist",
+      "*.js"
     ],
     "fileAssociations": [
       {
@@ -72,7 +80,7 @@
     ],
     "win": {
       "target": [
-        "portable"
+        "dir"
       ]
     },
     "linux": {
