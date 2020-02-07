@@ -80,7 +80,9 @@
     ],
     "win": {
       "target": [
-        "dir"
+        "dir",
+        "portable",
+        "nsis"
       ]
     },
     "linux": {
