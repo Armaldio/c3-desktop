@@ -83,17 +83,35 @@ async function createWindow() {
   });
 
   app.userAgentFallback = app.userAgentFallback.replace(`Electron/${process.versions.electron}`, '');
+  // app.allowRendererProcessReuse = true;
 
   const defaultMenu = Menu.getApplicationMenu();
   const menu = Menu.buildFromTemplate(defaultMenu.items);
 
   menu.append(new MenuItem({
-    label: 'Prevent close',
-    accelerator: 'CmdOrCtrl+W',
-    click: () => {
-      console.log('Preventing a close on ctrl+w');
-    },
+    label: 'Construct 3',
+    submenu: [
+      {
+        role: 'toggleDevTools',
+        accelerator: 'F12',
+      },
+      {
+        label: 'Reload',
+        accelerator: 'CmdOrCtrl+R',
+        click() {
+          mainWindow.webContents.send('reload');
+        },
+      },
+      {
+        label: 'Prevent close',
+        accelerator: 'CmdOrCtrl+W',
+        click: () => {
+          console.log('Preventing a close on ctrl+w');
+        },
+      },
+    ],
   }));
+  menu.append(new MenuItem({}));
   mainWindow.setMenu(menu);
 
   // mainWindow.loadURL('https://editor.construct.net');

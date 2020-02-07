@@ -23,16 +23,21 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { ipcRenderer } from 'electron';
+import { ipcRenderer, WebviewTag } from 'electron';
 
-  import WebviewTag = Electron.WebviewTag;
+// import WebviewTag = Electron.WebviewTag;
+
+  declare interface ToolboxData {
+    opened: boolean;
+    webview: WebviewTag | null
+  }
 
 export default Vue.extend({
   name: 'Toolbox',
-  data() {
+  data(): ToolboxData {
     return {
       opened: true,
-      webview: document.querySelector('#webview') as WebviewTag,
+      webview: null,
     };
   },
   props: {
@@ -71,6 +76,14 @@ export default Vue.extend({
         this.webview.reload();
       }
     },
+  },
+  mounted(): void {
+    this.webview = document.querySelector('#webview') as WebviewTag;
+    ipcRenderer.on('reload', (event, arg) => {
+      if (this.webview) {
+        this.webview.reload();
+      }
+    });
   },
 });
 </script>

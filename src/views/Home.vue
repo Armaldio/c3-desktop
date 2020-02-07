@@ -61,6 +61,8 @@ export default {
     });
 
     webview.addEventListener('ipc-message', (event) => {
+      console.log('event', event.channel);
+
       console[event.channel].apply(null, event.args);
     });
   },
