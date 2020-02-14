@@ -1,7 +1,11 @@
 <template>
-  <div id="app">
-    <router-view/>
-  </div>
+  <v-app id="app">
+    <v-content>
+      <v-container fluid>
+        <router-view/>
+      </v-container>
+    </v-content>
+  </v-app>
 </template>
 
 <style lang="scss">

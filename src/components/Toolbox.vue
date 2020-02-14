@@ -1,24 +1,79 @@
 <template>
-  <div
-    id="toolbox"
-    :class="{'opened': opened}"
+  <v-dialog
+    persistent
+    :value="show"
+    max-width="70%"
   >
-    <v-btn @click="openDevTool">Open devtool</v-btn>
-    <v-btn @click="closeDevTool">Close devtool</v-btn>
+    <v-card>
+      <v-card-title class="headline">
+        <div class="text-center modal-title">Construct Toolbox</div>
+        <v-btn
+          absolute
+          right
+          icon
+          @click="close"
+        >
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
+      </v-card-title>
 
-    <v-btn @click="closeDevToolWebview">Open construct devtool</v-btn>
-    <v-btn @click="closeDevToolWebview">Close construct devtool</v-btn>
+      <v-card-text>
+        <v-tabs
+          v-model="tabs"
+          fixed-tabs
+        >
+          <v-tabs-slider></v-tabs-slider>
+          <v-tab
+          >
+            <v-icon left>mdi-gesture-tap</v-icon>
+            Actions
+          </v-tab>
 
-    <v-btn @click="ReloadWebview">Reload Construct</v-btn>
+          <v-tab
+          >
+            <v-icon left>mdi-settings</v-icon>
+            Settings
+          </v-tab>
 
-    <v-btn
-      fab
-      class="toggle-drawer-button"
-      @click="opened = !opened"
-    >
-      <v-icon>{{ `mdi mdi-menu-${opened ? 'left' : 'right'}-outline` }}</v-icon>
-    </v-btn>
-  </div>
+          <v-tab
+            disabled
+          >
+            <v-icon left>mdi-toy-brick-search</v-icon>
+            Plugins
+          </v-tab>
+        </v-tabs>
+
+        <v-tabs-items v-model="tabs">
+          <v-tab-item>
+            <v-card flat>
+              <v-card-text>
+                <v-list>
+                  <v-list-item @click="openDevTool">
+                    Open devtool
+                  </v-list-item>
+                  <v-list-item @click="closeDevTool">
+                    Close devtool
+                  </v-list-item>
+                  <v-list-item @click="ReloadWebview">
+                    Reload Construct
+                  </v-list-item>
+                </v-list>
+
+                <!-- <v-btn @click="closeDevTool">Close devtool</v-btn>-->
+
+                <!-- <v-btn @click="closeDevToolWebview">Open construct devtool</v-btn>-->
+                <!-- <v-btn @click="closeDevToolWebview">Close construct devtool</v-btn>-->
+
+                <!-- <v-btn @click="ReloadWebview">Reload Construct</v-btn>-->
+              </v-card-text>
+            </v-card>
+          </v-tab-item>
+          <v-tab-item></v-tab-item>
+          <v-tab-item></v-tab-item>
+        </v-tabs-items>
+      </v-card-text>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script lang="ts">
@@ -29,7 +84,8 @@ import { ipcRenderer, WebviewTag } from 'electron';
 
   declare interface ToolboxData {
     opened: boolean;
-    webview: WebviewTag | null
+    webview: WebviewTag | null,
+    tabs: null | number
   }
 
 export default Vue.extend({
@@ -38,12 +94,16 @@ export default Vue.extend({
     return {
       opened: true,
       webview: null,
+      tabs: null,
     };
   },
   props: {
-    msg: String,
+    show: Boolean,
   },
   methods: {
+    close() {
+      this.$emit('close');
+    },
     async sendMessage(channel: string, ...args: any) {
       return new Promise(((resolve, reject) => {
         ipcRenderer.on(channel, (event, arg) => {
@@ -94,10 +154,11 @@ export default Vue.extend({
   scoped
   lang="scss"
 >
+  /*
   #toolbox {
     position: fixed;
     top: 0;
-    left: -400px;
+    right: -400px;
     width: 400px;
     height: 100%;
     z-index: 1;
@@ -112,9 +173,13 @@ export default Vue.extend({
 
   .toggle-drawer-button {
     position: absolute;
-    top: 50%;
+    top: 95%;
     transform: translate(0, -50%);
-    left: 380px;
+    right: 380px;
     z-index: 1;
+  } */
+
+  .modal-title {
+    width: 100%;
   }
 </style>

@@ -1,6 +1,53 @@
+import {ipcRenderer} from "electron";
 <template>
   <div class="home">
-    <Toolbox></Toolbox>
+    <Toolbox
+      :show="show"
+      @close="show = false"
+    ></Toolbox>
+    <v-speed-dial
+      class="speed-dial"
+      v-model="speedDialOpened"
+      absolute
+      bottom
+      right
+      direction="top"
+      open-on-hover
+      transition="slide-y-reverse-transition"
+    >
+      <template #activator>
+        <v-btn
+          v-model="speedDialOpened"
+          fab
+          large
+          bottom
+          right
+        >
+          <v-icon>mdi-settings</v-icon>
+        </v-btn>
+      </template>
+      <v-btn
+        fab
+        small
+        @click.stop="show = true"
+      >
+        <v-icon>mdi-settings-outline</v-icon>
+      </v-btn>
+      <v-btn
+        fab
+        small
+        disabled
+      >
+        <v-icon>mdi-reload</v-icon>
+      </v-btn>
+      <v-btn
+        fab
+        small
+        disabled
+      >
+        <v-icon>mdi-dev-to</v-icon>
+      </v-btn>
+    </v-speed-dial>
     <webview
       id="webview"
       src="https://editor.construct.net"
@@ -20,11 +67,15 @@
 <script>
 import Toolbox from '@/components/Toolbox.vue';
 import contextMenu from 'electron-context-menu';
+import { ipcRenderer } from 'electron';
 
 export default {
   name: 'home',
   data() {
-    return {};
+    return {
+      show: false,
+      speedDialOpened: false,
+    };
   },
   computed: {
     preloadPath() {
@@ -42,6 +93,7 @@ export default {
 
     const webview = document.querySelector('#webview');
     if (webview) {
+      console.log('iswebview');
       webview.addEventListener('dom-ready', () => {
         contextMenu({
           window: webview,
@@ -75,7 +127,11 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+  .speed-dial {
+    right: 36px;
+  }
+
   #webview {
     position: absolute;
     top: 0;

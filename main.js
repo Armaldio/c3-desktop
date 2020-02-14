@@ -1,16 +1,15 @@
 const {
-  app, BrowserWindow, protocol, Menu, MenuItem, session,
+  app, BrowserWindow, protocol, Menu, MenuItem, session, globalShortcut,
 } = require('electron');
 const fs = require('fs');
 const { autoUpdater } = require('electron-updater');
 const path = require('path');
 const { ipcMain } = require('electron');
 const serve = require('electron-serve');
+const electronLocalshortcut = require('@beaker/electron-localshortcut');
 const isDev = require('./isDev');
 
-
 const loadURL = serve({ directory: 'dist' });
-
 
 console.log(process.argv);
 
@@ -21,29 +20,6 @@ console.log('isDev', isDev);
 app.commandLine.appendSwitch('--in-process-gpu');
 app.commandLine.appendSwitch('--disable-direct-composition');
 
-process.on('uncaughtException', (err) => {
-  // log the message and stack trace
-  fs.writeFileSync('crash.log', `${err}\n${err.stack}`);
-
-  // do any cleanup like shutting down servers, etc
-
-  // relaunch the app (if you want)
-  app.relaunch({ args: [] });
-  app.exit(0);
-});
-
-process.on('SIGTERM', () => {
-  fs.writeFileSync('shutdown.log', 'Received SIGTERM signal');
-
-  // do any cleanup like shutting down servers, etc
-
-  // relaunch the app (if you want)
-  app.relaunch({ args: [] });
-  app.exit(0);
-});
-
-// Menu.setApplicationMenu(null);
-
 autoUpdater.checkForUpdatesAndNotify();
 
 async function createWindow() {
@@ -52,6 +28,10 @@ async function createWindow() {
   //             "Content-Security-Policy": [ "default-src 'none'" ]
   //         }, details.responseHeaders)});
   // });
+
+  if (isDev) {
+    require('vue-devtools').install();
+  }
 
 
   // Create the browser window.
@@ -80,65 +60,57 @@ async function createWindow() {
     event.reply('open-dev-tools', true);
   });
 
-
   ipcMain.on('close-dev-tools', (event, arg) => {
     mainWindow.webContents.closeDevTools();
     event.reply('close-dev-tools', true);
   });
 
+  ipcMain.on('toggle-dev-tools', (event, arg) => {
+    mainWindow.webContents.toggleDevTools();
+    event.reply('toggle-dev-tools', true);
+  });
+
   app.userAgentFallback = app.userAgentFallback.replace(`Electron/${process.versions.electron}`, '');
-  // app.allowRendererProcessReuse = true;
 
-  const defaultMenu = Menu.getApplicationMenu();
-  const menu = Menu.buildFromTemplate(defaultMenu.items);
-
-  menu.append(new MenuItem({
-    label: 'Construct 3',
-    submenu: [
-      {
-        role: 'toggleDevTools',
-        accelerator: 'F12',
-      },
-      {
-        label: 'Reload',
-        accelerator: 'CmdOrCtrl+R',
-        click() {
-          mainWindow.webContents.send('reload');
-        },
-      },
-      {
-        label: 'Prevent close',
-        accelerator: 'CmdOrCtrl+W',
-        click: () => {
-          console.log('Preventing a close on ctrl+w');
-        },
-      },
-    ],
-  }));
-  menu.append(new MenuItem({}));
-  mainWindow.setMenu(menu);
-
-  // mainWindow.loadURL('https://editor.construct.net');
   if (isDev) {
     mainWindow.loadURL('http://localhost:8080');
     mainWindow.webContents.openDevTools();
   } else {
     await loadURL(mainWindow);
-    console.log('Running in production environement');
-
-    mainWindow.removeMenu();
+    console.log('Running in production environment');
   }
 
+  mainWindow.removeMenu();
   mainWindow.maximize();
+
+  electronLocalshortcut.register(mainWindow, 'F12', () => {
+    mainWindow.webContents.toggleDevTools();
+  });
+
+  electronLocalshortcut.register(mainWindow, 'CmdOrCtrl+R', () => {
+    mainWindow.webContents.send('reload');
+  });
+
+  electronLocalshortcut.register(mainWindow, 'CmdOrCtrl+W', () => {
+    console.log('Preventing a close on ctrl+w');
+  });
 
   app.on('browser-window-created', (e, window) => {
     console.log('new window created !');
 
-    window.setMenu(menu);
+    electronLocalshortcut.register(window, 'F12', () => {
+      window.webContents.toggleDevTools();
+    });
 
-    if (!isDev) {
-      window.removeMenu();
-    }
+    electronLocalshortcut.register(window, 'CmdOrCtrl+R', () => {
+      window.webContents.reload();
+    });
+
+    electronLocalshortcut.register(window, 'CmdOrCtrl+W', () => {
+      console.log('Preventing a close on ctrl+w');
+    });
+
+    window.removeMenu();
   });
 
   mainWindow.once('ready-to-show', () => {
@@ -151,6 +123,26 @@ async function createWindow() {
     mainWindow = null;
   });
 }
+
+app.once('ready', () => {
+  if (mainWindow) {
+    console.log('mainWindow OK');
+    const ret = hotkey.register(mainWindow, 'control+b', 'F12');
+    console.log('ret', ret);
+  }
+  // const ret = globalShortcut.register('control+b', () => {
+  //   console.log('pressed!');
+  // });
+  //
+  // if (!ret) {
+  //   console.log('registration failed');
+  // }
+});
+
+app.on('aaa', (event) => {
+  console.log('F12 received');
+  mainWindow.webContents.openDevTools();
+});
 
 app.on('ready', createWindow);
 
